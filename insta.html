@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head><style type="text/css">
+#header {height:60px;
+background:#F0F0F0;
+BORDER: 0px solid #fff;
+position:fixed;
+top:0px;
+z-index:4;
+width:100%;
+margin-left:-0.6%;
+background: rgb(85,126,181); /* Old browsers */
+background: -moz-linear-gradient(top,  rgba(85,126,181,1) 2%, rgba(63,106,163,1) 22%, rgba(35,78,153,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(2%,rgba(85,126,181,1)), color-stop(22%,rgba(63,106,163,1)), color-stop(100%,rgba(35,78,153,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  rgba(85,126,181,1) 2%,rgba(63,106,163,1) 22%,rgba(35,78,153,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  rgba(85,126,181,1) 2%,rgba(63,106,163,1) 22%,rgba(35,78,153,1) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  rgba(85,126,181,1) 2%,rgba(63,106,163,1) 22%,rgba(35,78,153,1) 100%); /* IE10+ */
+background: linear-gradient(to bottom,  rgba(85,126,181,1) 2%,rgba(63,106,163,1) 22%,rgba(35,78,153,1) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#557eb5', endColorstr='#234e99',GradientType=0 ); /* IE6-9 */
+} @font-face
+{
+font-family: Channel.ttf;
+src: url(Channel.ttf);
+}
+.thumbnail{
+position: relative;
+z-index: 0;
+}
+
+.thumbnail:hover{
+background-color: transparent;
+z-index: 50;
+}
+
+.thumbnail span{ /*CSS for enlarged image*/
+position: absolute;
+background-color: lightyellow;
+padding: 5px;
+left: 100px;
+border: 1px dashed gray;
+visibility: hidden;
+color: black;
+text-decoration: none;
+}
+
+.thumbnail span img{ /*CSS for enlarged image*/
+border-width: 0;
+padding: 2px;
+}
+
+.thumbnail:hover span{ /*CSS for enlarged image on hover*/
+visibility: visible;
+top: 0;
+left: 0px; /*position where enlarged image should offset horizontally */
+
+}
+
+.fo{font-family: Channel ;
+color:#CED8F6;}
+
+.hashname{font-family: Channel ;
+color:#585858;
+margin-left:35%;margin-top:8%;
+text-shadow:2px 2px #BDBDBD;
+ font-size: 48px;}
+
+ 
+.rounded {
+   	height:150px;
+width:150px;
+border-radius: 10px;
+}
+ 
+ #images { width: 50%;
+margin: auto;  height: 250px; }
+ 
+ .imageBox{
+ float:left;
+margin:8px;
+margin-left: 20px;
+height:150px;
+width:150px;
+border-radius: 10px;
+-webkit-box-shadow: 4px 6px 56px 4px rgba(57,58,61,0.64);
+-moz-box-shadow: 4px 6px 56px 4px rgba(57,58,61,0.64);
+box-shadow: 4px 6px 56px 4px rgba(57,58,61,0.64);}
+</style>
+ <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+</script>
+ <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+ 		<meta charset="UTF-8" />
+
+ <script>
+$(document).ready(function(){
+  $("input").keypress(function(e){
+	if(e.which == 13){
+	var interval ;	
+	clearInterval(interval);
+ 			document.getElementById('load').innerHTML= "<div style='margin-left: 40%; margin-top:10%; display: block'><img src='loading.gif' title='Loading' /></div>";
+
+ 	var x = document.getElementById("hashtag").value;
+					document.getElementById("name").innerHTML=x;
+			$("#images").fadeOut( "fast");
+  						$("#images").empty();
+ 		 	
+					  $.getJSON("Get_info.php?hashtag="+x,function(data1){
+					  /*
+<img src="95eb3a427c6e11e38bb00e3bf384f99a_5.jpg"/>
+<img class="large" src="95eb3a427c6e11e38bb00e3bf384f99a_5.jpg"  />*/
+		
+  						for (var i = 0; i <1; i++){
+ 		document.getElementById('load').innerHTML= "<div style='margin-left: 40%; margin-top:10%; display: none'><img src='loading.gif' title='Loading' /></div>";	
+		
+	$("#images").append( "<div class='"+"imageBox" +"'id='"+i+"'> </div>") ;
+ //<a class="thumbnail" href="#thumb"><img src="media/tree_thumb.jpg" width="100px" height="66px" border="0" /><span><img src="media/tree.jpg" /><br />Simply beautiful.</span></a>
+	 $("#"+i).append("<a class='thumbnail' >  <img src='"+data1.data[i].images.thumbnail.url+"' class='rounded'><span><img src='"+data1.data[i].images.low_resolution.url+"'  /></span></a>"); 
+ 
+
+ 	} $( "#images").fadeIn(3000);
+		  });	 	 	
+		
+		
+			  	interval = setInterval(function(){
+				 	var y = document.getElementById("hashtag").value;
+
+	$.getJSON('Get_info.php?hashtag='+y+'&count=1',function(data2){
+
+		var found = false;
+			for (var j = 0; j <20; j++){
+		if( data2.data[0].images.thumbnail.url == $("#"+j+"> a > img").attr("src")){
+		found = true; } } 
+   
+		if(!found){
+		var picnum = Math.floor((Math.random()*20));
+	$( "#"+picnum ).fadeOut("slow");
+		$("#"+picnum).replaceWith("<div class='imageBox' id='"+picnum+"'><a  class='thumbnail' >  <img src='"+data2.data[0].images.thumbnail.url+"' class='rounded'><span><img src='"+data2.data[0].images.low_resolution.url+"'/></span></a></div>"); }});},  3000);  
+       $("#"+picnum).fadeIn( "slow" );	
+  
+ 
+  }
+ 
+});});
+ 			
+ 
+
+</script>
+  
+
+
+</head>
+<body style="background-image: url(corrugation.png);">
+
+ <div id="header">
+   <span class="fo"> &nbsp; Instagram Hashtag Explorer </span> 
+  <label style=" color:#CED8F6; margin-left:40%; margin-top:-2.5%;"> Hashtag: <input id="hashtag" type="text" name="search"> <br></label>
+</div>
+
+<div id="cont">
+<h1   class="hashname"id="name"> </h1>
+<div id="images">
+ 
+ </div>
+ <div id="load">
+ </div>
+ </div>
+
+</body>
+
+</html>
